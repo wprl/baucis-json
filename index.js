@@ -1,5 +1,4 @@
 // __Dependencies__
-var baucis = require('baucis');
 var es = require('event-stream');
 
 // __Private Methods__
@@ -101,7 +100,10 @@ function JSONParser () {
 }
 
 // Decorate the Api class.
-baucis.Api.decorators(function () {
-  this.setFormatter('application/json', singleOrArray);
-  this.setParser('application/json', JSONParser);
-});
+var plugin = module.exports = function () {
+  var baucis = this;
+  baucis.Api.decorators(function () {
+    this.setFormatter('application/json', singleOrArray);
+    this.setParser('application/json', JSONParser);
+  });
+};
