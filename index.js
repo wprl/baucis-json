@@ -45,15 +45,14 @@ function singleOrArray (alwaysArray) {
   );
 };
 
-// Default parser.  Parses incoming JSON string into an object orobjects.
+// Default parser.  Parses incoming JSON string into an object or objects.
 // Works whether an array or single object is sent as the request body.  It's
 // very lenient with input outside of objects.
 function JSONParser () {
   var depth = 0;
   var buffer = '';
 
-  return es.through(
-    function (chunk) {
+  return es.through(function (chunk) {
     var match;
     var head;
     var brace;
