@@ -1,0 +1,20 @@
+{
+  "name": "baucis-json",
+  "version": "0.0.1",
+  "description": "Streaming JSON parser and formatter for baucis.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "peerDependencies": {
+    "baucis": "~0.16.15"
+  },
+  "keywords": [
+    "baucis", "stream", "json", "parse", "parser", "format"
+  ],
+  "author": "William Riley-Land",
+  "license": "MIT",
+  "dependencies": {
+    "event-stream": "^3.1.1"
+  }
+}
