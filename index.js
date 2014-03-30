@@ -1,6 +1,6 @@
 // __Dependencies__
 var baucis = require('baucis');
-var ex = require('event-stream');
+var es = require('event-stream');
 
 // __Private Methods__
 
