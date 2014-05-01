@@ -53,7 +53,7 @@ var plugin = module.exports = function () {
   // very lenient with input outside of first-level braces.  This means that
   // a collection of JSON objects can be sent in different ways e.g. separated
   // by whitespace or in a fully JSON-compatible array with objects split by 
-  // commas and being split by commas.
+  // commas.
   function JSONParser () {
     var depth = 0;
     var buffer = '';
