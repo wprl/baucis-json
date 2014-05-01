@@ -1,13 +1,13 @@
 {
   "name": "baucis-json",
-  "version": "1.0.0-prerelease.1",
+  "version": "1.0.0-prerelease.2",
   "description": "Baucis uses this to parse and format streams of JSON.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
-    "baucis": ">=1.0.0-prerelease.6"
+    "baucis": ">0.20.0"
   },
   "keywords": [
     "baucis", "stream", "json", "parse", "parser", "format"
