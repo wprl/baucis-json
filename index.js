@@ -109,10 +109,7 @@ var plugin = module.exports = function () {
     });
   }
 
-  // __API Decorators__
-  // Add a JSON formatter and parser to the API.
-  baucis.Api.decorators(function () {
-    this.setFormatter('application/json', singleOrArray);
-    this.setParser('application/json', JSONParser);
-  });
+  // Add a JSON formatter and parser.
+  baucis.setFormatter('application/json', singleOrArray);
+  baucis.setParser('application/json', JSONParser);
 };
