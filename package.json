@@ -1,6 +1,6 @@
 {
   "name": "baucis-json",
-  "version": "1.0.0-prerelease.2",
+  "version": "1.0.0-candidate.0",
   "description": "Baucis uses this to parse and format streams of JSON.",
   "main": "index.js",
   "scripts": {

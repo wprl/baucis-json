@@ -63,48 +63,50 @@ var plugin = module.exports = function () {
       var head;
       var brace;
       var tail;
+      var emission;
       var remaining = chunk.toString();
-      // After 3 years writing NodeJS code, this is the first try/catch I've needed! - wprl
-      try {
-        while (remaining !== '') {
-          match = remaining.match(/[\}\{]/);
-          // The head of the string is all characters up to the first brace, if any.
-          head = match ? remaining.substr(0, match.index) : remaining;
-          // The first brace in the string, if any.
-          brace = match ? match[0] : '';
-          // The rest of the string, following the brace.
-          tail = match ? remaining.substr(match.index + 1) : '';
+      while (remaining !== '') {
+        match = remaining.match(/[\}\{]/);
+        // The head of the string is all characters up to the first brace, if any.
+        head = match ? remaining.substr(0, match.index) : remaining;
+        // The first brace in the string, if any.
+        brace = match ? match[0] : '';
+        // The rest of the string, following the brace.
+        tail = match ? remaining.substr(match.index + 1) : '';
 
-          if (depth === 0) {
-            // The parser is outside an object.
-            // Ignore the head of the string.
-            // Add brace if it's an open brace.
-            if (brace === '{') {
-              depth += 1;
-              buffer += brace;
-            }
-          }
-          else {
-            // The parser is inside an object.
-            // Add the head of the string to the buffer.
-            buffer += head;
-            // Increase or decrease depth if a brace was found.
-            if (brace === '{') depth += 1;
-            else if (brace === '}') depth -= 1;
-            // Add the brace to the buffer.
+        if (depth === 0) {
+          // The parser is outside an object.
+          // Ignore the head of the string.
+          // Add brace if it's an open brace.
+          if (brace === '{') {
+            depth += 1;
             buffer += brace;
-            // If the object ended, emit it.
-            if (depth === 0) {
-              this.emit('data', JSON.parse(buffer));
-              buffer = '';
-            }
           }
-          // Move on to the unprocessed remainder of the string.
-          remaining = tail;
         }
-      }
-      catch (error) {
-        this.emit('error', baucis.Error.SyntaxError('The body of this request was invalid and could not be parsed. "%s"', error.message));
+        else {
+          // The parser is inside an object.
+          // Add the head of the string to the buffer.
+          buffer += head;
+          // Increase or decrease depth if a brace was found.
+          if (brace === '{') depth += 1;
+          else if (brace === '}') depth -= 1;
+          // Add the brace to the buffer.
+          buffer += brace;
+          // If the object ended, emit it.
+          if (depth === 0) {
+            try {
+              emission = JSON.parse(buffer);
+            }
+            catch (error) {
+              this.emit('error', baucis.Error.SyntaxError('The body of this request was invalid and could not be parsed. "%s"', error.message));
+            }
+
+            this.emit('data', emission);
+            buffer = '';
+          }
+        }
+        // Move on to the unprocessed remainder of the string.
+        remaining = tail;
       }
     });
   }
