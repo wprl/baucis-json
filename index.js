@@ -98,7 +98,7 @@ var plugin = module.exports = function () {
               emission = JSON.parse(buffer);
             }
             catch (error) {
-              this.emit('error', baucis.Error.SyntaxError('The body of this request was invalid and could not be parsed. "%s"', error.message));
+              this.emit('error', baucis.Error.BadSyntax('The body of this request was invalid and could not be parsed. "%s"', error.message));
             }
 
             this.emit('data', emission);
