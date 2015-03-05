@@ -1,6 +1,6 @@
 {
   "name": "baucis-json",
-  "version": "1.0.0-candidate.1",
+  "version": "1.0.0",
   "description": "Baucis uses this to parse and format streams of JSON.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "William Riley-Land <william@kun.io>",
   "license": "MIT",
   "dependencies": {
-    "event-stream": "~3.1.1"
+    "event-stream": "~3.2.2"
   },
   "repository": {
     "type": "git",
