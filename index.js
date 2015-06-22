@@ -38,7 +38,16 @@ var plugin = module.exports = function () {
         if (!first) return this.emit('end');
         // If only one document emit it unwrapped, unless always returning an array.
         if (!multiple && alwaysArray) this.emit('data', '[');
-        if (!multiple) this.emit('data', JSON.stringify(first));
+        if (!multiple) {
+          var payload;
+          if (isSingleValue(first)) {
+            payload = envelopeSingleValue(first);
+          }
+          else {
+            payload = first;
+          }
+          this.emit('data', JSON.stringify(payload));           
+        }
         // For greater than one document, emit the closing array.
         else this.emit('data', ']');
         if (!multiple && alwaysArray) this.emit('data', ']');
@@ -47,6 +56,20 @@ var plugin = module.exports = function () {
       }
     );
   };
+  
+  function isSingleValue(value) {
+    if (!value) {
+      return false;
+    }
+    var ty = typeof value;  
+    if ('number' === ty || 'string' === ty || 'boolean' === ty ) {
+         return true;
+    }
+    return false;
+  }
+  function envelopeSingleValue(data) {
+    return  { value : data };
+  }
 
   // Default parser.  Parses incoming JSON string into an object or objects.
   // Works whether an array or single object is sent as the request body.  It's

@@ -104,7 +104,7 @@ describe('primitive values serialization', function () {
 		var testObject = 3.14;
 		format(testObject, function(err, result) {
 			expect(err).to.be(null);
-			expect(result).to.be('3.14');
+			expect(result).to.be('{"value":3.14}');
 			done();
 		});
 	});
@@ -113,7 +113,7 @@ describe('primitive values serialization', function () {
 		var testObject = 'enterprise';
 		format(testObject, function(err, result) {
 			expect(err).to.be(null);
-			expect(result).to.be('"enterprise"');
+			expect(result).to.be('{"value":"enterprise"}');
 			done();
 		});
 	});
@@ -122,7 +122,7 @@ describe('primitive values serialization', function () {
 		var testObject = true;
 		format(testObject, function(err, result) {
 			expect(err).to.be(null);
-			expect(result).to.be('true');
+			expect(result).to.be('{"value":true}');
 			done();
 		});
 	});
