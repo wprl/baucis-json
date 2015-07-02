@@ -1,8 +1,11 @@
 {
-  "name": "baucis-json",
+  "name": "baucis-json-strict",
   "version": "1.0.0",
   "description": "Baucis uses this to parse and format streams of JSON.",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org/"
+  },
   "scripts": {
     "test": "mocha",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha"

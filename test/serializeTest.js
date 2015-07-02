@@ -1,5 +1,5 @@
 var expect = require('expect.js');
-var sut = require('../index');
+var baucisJson = require('..');
 
 var baucisMock = {
   Error: {
@@ -15,34 +15,34 @@ var baucisMock = {
 
 function format(obj, cb) {
   var response = '';
-  var f1 = baucisMock.formatter();
+  var formatter = baucisMock.formatter();
 
-  f1.on('data', function(chunk) {
+  formatter.on('data', function(chunk) {
     if (chunk) {
       response += chunk;
     }
   });
-  f1.on('end', function(chunk) {
+  formatter.on('end', function(chunk) {
     if (chunk) {
       response += chunk;
     }
     cb(null, response);
   });
 
-  f1.write(obj);
-  f1.end();
+  formatter.write(obj);
+  formatter.end();
 }
 
 function formatArray(array, cb) {
   var response = '';
-  var f1 = baucisMock.formatter();
+  var formatter = baucisMock.formatter();
 
-  f1.on('data', function(chunk) {
+  formatter.on('data', function(chunk) {
     if (chunk) {
       response += chunk;
     }
   });
-  f1.on('end', function(chunk) {
+  formatter.on('end', function(chunk) {
     if (chunk) {
       response += chunk;
     }
@@ -51,19 +51,19 @@ function formatArray(array, cb) {
 
   for(var i=0; i<array.length; i++) {
     var obj = array[i];
-    f1.write(obj);
+    formatter.write(obj);
   }
-  f1.end();
+  formatter.end();
 }
 
 
-sut.apply(baucisMock);
+baucisJson.apply(baucisMock);
 
 describe('object serialization', function () {
-  it('serialize object', function (done) {
+  it('serializes an object', function (done) {
     var testObject = {a: 'name', b: 7.1, c:true, d:null, e: { name: 'spook'} };
     format(testObject, function(err, result) {
-      expect(err).to.be(null);
+      if (err) return done(err);
       expect(result).to.be('{"a":"name","b":7.1,"c":true,"d":null,"e":{"name":"spook"}}');
       done();
     });
@@ -71,19 +71,19 @@ describe('object serialization', function () {
 });
 
 describe('array serialization', function () {
-  it('serialize array of objects', function (done) {
+  it('serializes an array of objects', function (done) {
     var testObject = {a: 'name', b: 7.1, c:true, d:null, e: { name: 'spook'} };
     var arraySample = [testObject, testObject, testObject];
     formatArray(arraySample, function(err, result) {
-      expect(err).to.be(null);
+      if (err) return done(err);
       expect(result).to.be('[{"a":"name","b":7.1,"c":true,"d":null,"e":{"name":"spook"}},\n{"a":"name","b":7.1,"c":true,"d":null,"e":{"name":"spook"}},\n{"a":"name","b":7.1,"c":true,"d":null,"e":{"name":"spook"}}]');
       done();
     });
   });
-  it('serialize array of numbers', function (done) {
+  it('serializes an array of numbers', function (done) {
     var arraySample = [1, -2.0, 3.010];
     formatArray(arraySample, function(err, result) {
-      expect(err).to.be(null);
+      if (err) return done(err);
       expect(result).to.be('[1,\n-2,\n3.01]');
       done();
     });
@@ -91,38 +91,65 @@ describe('array serialization', function () {
 });
 
 describe('primitive values serialization', function () {
-  it('serialize null', function (done) {
+  it('serializes null', function (done) {
     var testObject = null;
     format(testObject, function(err, result) {
-      expect(err).to.be(null);
-      expect(result).to.be('');
+      if (err) return done(err);
+      expect(result).to.be('{"value":null}');
       done();
     });
   });
 
-  it('serialize number', function (done) {
+  it('serializes a number', function (done) {
     var testObject = 3.14;
     format(testObject, function(err, result) {
-      expect(err).to.be(null);
+      if (err) return done(err);
       expect(result).to.be('{"value":3.14}');
       done();
     });
   });
 
-  it('serialize string', function (done) {
+  it('serializes zero', function (done) {
+    var testObject = 0;
+    format(testObject, function(err, result) {
+      if (err) return done(err);
+      expect(result).to.be('{"value":0}');
+      done();
+    });
+  });
+
+  it('serializes a string', function (done) {
     var testObject = 'enterprise';
     format(testObject, function(err, result) {
-      expect(err).to.be(null);
+      if (err) return done(err);
       expect(result).to.be('{"value":"enterprise"}');
       done();
     });
   });
 
-  it('serialize boolean', function (done) {
+  it('serializes the empty string', function (done) {
+    var testObject = '';
+    format(testObject, function(err, result) {
+      if (err) return done(err);
+      expect(result).to.be('{"value":""}');
+      done();
+    });
+  });
+
+  it('serializes a boolean', function (done) {
     var testObject = true;
     format(testObject, function(err, result) {
-      expect(err).to.be(null);
+      if (err) return done(err);
       expect(result).to.be('{"value":true}');
+      done();
+    });
+  });
+
+  it('serializes false', function (done) {
+    var testObject = false;
+    format(testObject, function(err, result) {
+      if (err) return done(err);
+      expect(result).to.be('{"value":false}');
       done();
     });
   });

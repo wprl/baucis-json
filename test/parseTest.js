@@ -1,5 +1,5 @@
 var expect = require('expect.js');
-var sut = require('../index');
+var baucisJson = require('..');
 
 var baucisMock = {
   Error: {
@@ -13,35 +13,35 @@ var baucisMock = {
   }
 };
 
-sut.apply(baucisMock);
+baucisJson.apply(baucisMock);
 
 function parse(obj, cb) {
   var response = [];
-  var f1 = baucisMock.parser();
+  var parser = baucisMock.parser();
 
-  f1.on('data', function(chunk) {
+  parser.on('data', function(chunk) {
     if (chunk) {
       return response.push(chunk);
     }
   });
-  f1.on('error', function(err) {
+  parser.on('error', function(err) {
     return cb(err, null);
   });
-  f1.on('end', function(chunk) {
+  parser.on('end', function(chunk) {
     if (chunk) {
       response.push(chunk);
     }
     return cb(null, response);
   });
 
-  f1.write(obj);
-  f1.end();
+  parser.write(obj);
+  parser.end();
 }
 
 
 describe('parse test', function () {
   it('parse object', function (done) {
-    var sample = '{"a":"name","b":7.1,"c":true,"d":null,"e":{"name":"spook"}}';
+    var sample = '{"a":"name","b":7.1,"c":true,"d":null,"e":{"name":"spook"},"f":false}';
     parse(sample, function(err, objArray) {
       expect(err).to.be(null);
       expect(objArray[0]).to.have.property('a', 'name');
@@ -50,6 +50,8 @@ describe('parse test', function () {
       expect(objArray[0]).to.have.property('d', null);
       expect(objArray[0]).to.have.property('e');
       expect(objArray[0].e).to.have.property('name', 'spook');
+      expect(objArray[0]).to.have.property('f', false);
+
       done();
     });
   });

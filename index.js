@@ -8,14 +8,14 @@ var plugin = module.exports = function () {
   // __Private Methods__
   // Default formatter — emit a single JSON object or an array of them.
   function singleOrArray (alwaysArray) {
-    var first = false;
+    var first = undefined;
     var multiple = false;
 
     return es.through(
       function (doc) {
         // Start building the output.  If this is the first document,
         // store it for a moment.
-        if (!first) {
+        if (first === undefined) {
           first = doc;
           return;
         }
@@ -35,7 +35,7 @@ var plugin = module.exports = function () {
       },
       function () {
         // If no documents, simply end the stream.
-        if (!first) return this.emit('end');
+        if (first === undefined) return this.emit('end');
         // If only one document emit it unwrapped, unless always returning an array.
         if (!multiple && alwaysArray) this.emit('data', '[');
         if (!multiple) {
@@ -46,7 +46,7 @@ var plugin = module.exports = function () {
           else {
             payload = first;
           }
-          this.emit('data', JSON.stringify(payload));           
+          this.emit('data', JSON.stringify(payload));
         }
         // For greater than one document, emit the closing array.
         else this.emit('data', ']');
@@ -56,26 +56,24 @@ var plugin = module.exports = function () {
       }
     );
   };
-  
-  function isSingleValue(value) {
-    if (!value) {
-      return false;
-    }
-    var ty = typeof value;  
-    if ('number' === ty || 'string' === ty || 'boolean' === ty ) {
-         return true;
-    }
+
+  function isSingleValue (value) {
+    if (value === null) return true;
+    if (typeof value === 'number') return true;
+    if (typeof value === 'string') return true;
+    if (typeof value === 'boolean') return true;
     return false;
   }
-  function envelopeSingleValue(data) {
-    return  { value : data };
+
+  function envelopeSingleValue (value) {
+    return  { value : value };
   }
 
   // Default parser.  Parses incoming JSON string into an object or objects.
   // Works whether an array or single object is sent as the request body.  It's
   // very lenient with input outside of first-level braces.  This means that
   // a collection of JSON objects can be sent in different ways e.g. separated
-  // by whitespace or in a fully JSON-compatible array with objects split by 
+  // by whitespace or in a fully JSON-compatible array with objects split by
   // commas.
   function JSONParser () {
     var depth = 0;
